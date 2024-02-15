@@ -20,7 +20,7 @@ function App() {
   const words = useWords();
 
   const word = words[0] ? words[0] : {};
-
+  console.log();
   return (
     <>
       <div className="flex h-screen justify-center items-center">
@@ -35,7 +35,7 @@ function App() {
               </Badge>
             </div>
             <CardDescription className="text-sm">
-              {word.date.toDate().toLocaleDateString()}
+              {word?.date?.toDate().toLocaleDateString()}
             </CardDescription>
           </CardHeader>
           <CardContent>
