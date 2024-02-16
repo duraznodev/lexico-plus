@@ -15,12 +15,12 @@ import {
 } from "@radix-ui/react-icons";
 import { Badge } from "./components/ui/badge";
 import { useWords } from "./hooks/useWords";
+import { NewWordDialog } from "./components/Form";
 
 function App() {
   const words = useWords();
+  const word = words[0] ? words[~~(Math.random() * words.length)] : {};
 
-  const word = words[0] ? words[0] : {};
-  console.log();
   return (
     <>
       <div className="flex h-screen justify-center items-center">
@@ -66,9 +66,11 @@ function App() {
             <ArrowRightIcon className="w-full h-full" />
           </Button>
         </div>
-        <Button variant="secondary" className="rounded-full aspect-square ">
-          <PlusIcon className="min-w-8" />
-        </Button>
+        <NewWordDialog>
+          <Button variant="secondary" className="rounded-full aspect-square ">
+            <PlusIcon className="min-w-8" />
+          </Button>
+        </NewWordDialog>
       </div>
     </>
   );

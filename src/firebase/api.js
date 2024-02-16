@@ -10,9 +10,9 @@ import {
 } from "firebase/firestore";
 import { firebase_db } from "./config";
 
-export const getWords = () => collection(firebase_db, "words");
+export const getWordsCollection = () => collection(firebase_db, "words");
 
-export const addToCollection = (collection, data) => addDoc(collection, data);
+export const addNewWord = (data) => addDoc(getWordsCollection(), data);
 
 export const allFromCollection = async (collection) => {
   return (await getDocs(collection)).docs.map((doc) => ({
