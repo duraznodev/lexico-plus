@@ -3,7 +3,7 @@ import { allFromCollection, getWordsCollection } from "../firebase/api.js";
 import { useEffect } from "react";
 
 export function useWords() {
-  const [words, setWords] = useState([]);
+  const [words, setWords] = useState(undefined);
   useEffect(() => {
     const init = async () => {
       const words = await allFromCollection(getWordsCollection());
