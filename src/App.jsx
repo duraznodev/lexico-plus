@@ -62,7 +62,7 @@ function App() {
         </div>
       </div>
 
-      <div className="flex-1 container flex justify-center items-center">
+      <div className="flex-1 px-4 flex justify-center items-center">
         <Carousel
           setApi={setApi}
           opts={{ loop: true }}
