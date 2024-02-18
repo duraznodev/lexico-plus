@@ -11,12 +11,15 @@ import {
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel";
+import { Toggle } from "@/components/ui/toggle";
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
   CheckIcon,
   PlusIcon,
   ShuffleIcon,
+  StarIcon,
+  StarFilledIcon,
 } from "@radix-ui/react-icons";
 import { useEffect, useState } from "react";
 import { NewWordDialog } from "./components/Form";
@@ -27,7 +30,7 @@ import { GlobalProvider, useGlobal } from "./contexts/GlobalContext";
 
 function App() {
   const global = useGlobal();
-  const { words, api, setApi } = global || {};
+  const { words, api, setApi, featureWord } = global || {};
 
   const shuffleWord = () => {
     while (true) {
@@ -43,7 +46,7 @@ function App() {
     setTimeout(() => {
       api?.scrollTo(words.length - 1);
     });
-  }, [words]);
+  }, [words?.length]);
 
   const nextWord = () => {
     api.scrollNext();
@@ -78,12 +81,21 @@ function App() {
                         <CardTitle className="text-xl tracking-normal font-bold">
                           {word.word}
                         </CardTitle>
-                        <Badge
-                          variant="outline"
-                          className="font-bold rounded-full"
-                        >
-                          {word.times}
-                        </Badge>
+                        <div className="h-7 flex items-center">
+                          {/* <Badge
+                            variant="outline"
+                            className="font-bold rounded-full flex justify-center aspect-square"
+                          >
+                            {word.times}
+                          </Badge> */}
+                          <Button variant="ghost" onClick={featureWord}>
+                            {word?.featured ? (
+                              <StarFilledIcon className="h-5 w-5" />
+                            ) : (
+                              <StarIcon className="h-5 w-5" />
+                            )}
+                          </Button>
+                        </div>
                       </div>
                       <CardDescription className="text-sm">
                         {word?.date?.toDate().toLocaleDateString()}
@@ -98,7 +110,7 @@ function App() {
                 </CarouselItem>
               ))
             ) : (
-              <Card className="w-full mx-10 max-w-[400px] animate-pulse">
+              <Card className="w-full px-4 max-w-[400px] animate-pulse">
                 <CardHeader className="space-y-0">
                   <div className="flex justify-between">
                     <CardTitle className="text-xl tracking-normal font-bold">

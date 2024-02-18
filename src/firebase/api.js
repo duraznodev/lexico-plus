@@ -2,6 +2,7 @@ import {
   addDoc,
   collection,
   doc,
+  getDoc,
   getDocs,
   or,
   query,
@@ -25,18 +26,32 @@ export const allFromCollection = async (collection) => {
     });
 };
 
-export const updateInCollection = async (
-  collection_name,
-  id,
-  updatedFields,
-  farm_id
-) => {
-  const animalRef = doc(firebase_db, `farms/${farm_id}/${collection_name}`, id);
+export const featureNewWord = async (wordId) => {
+  const wordRef = doc(firebase_db, `words/${wordId}`);
+  const data = (await getDoc(wordRef)).data();
+
   try {
-    await updateDoc(animalRef, updatedFields);
-    return { success: true };
+    await updateDoc(wordRef, {
+      featured: !data.featured,
+    });
   } catch (error) {
-    // console.error('Error updating document:', error);
-    return { success: false, error };
+    //     // console.error('Error updating document:', error);
+    //     return { success: false, error };
   }
 };
+
+// export const updateInCollection = async (
+//   collection_name,
+//   id,
+//   updatedFields,
+//   farm_id
+// ) => {
+//   const animalRef = doc(firebase_db, `farms/${farm_id}/${collection_name}`, id);
+//   try {
+//     await updateDoc(animalRef, updatedFields);
+//     return { success: true };
+//   } catch (error) {
+//     // console.error('Error updating document:', error);
+//     return { success: false, error };
+//   }
+// };
