@@ -15,7 +15,7 @@ export function GlobalProvider({ children }) {
   const newWord = async (word) => {
     const newWords = [...words, word];
     setWords(newWords);
-    // addNewWord(await word);
+    addNewWord(await word);
   };
 
   const featureWord = () => {
