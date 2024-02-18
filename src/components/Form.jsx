@@ -18,23 +18,21 @@ import {
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { useGlobal } from "@/contexts/GlobalContext";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Label } from "@radix-ui/react-label";
+import { Timestamp } from "firebase/firestore";
 import * as React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Textarea } from "@/components/ui/textarea";
-import { addNewWord } from "@/firebase/api";
-import { Timestamp } from "firebase/firestore";
 
 export function NewWordDialog({ children }) {
   const [open, setOpen] = React.useState(false);
@@ -78,10 +76,13 @@ export function NewWordDialog({ children }) {
 }
 
 function ProfileForm({ className, closeDrawer }) {
+  const { newWord } = useGlobal();
+
   const formSchema = z.object({
     word: z.string().min(1, "Este campo es requerido."),
     meaning: z.string().min(1, "Este campo es requerido."),
   });
+
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -96,7 +97,7 @@ function ProfileForm({ className, closeDrawer }) {
       date: Timestamp.now(),
       times: 0,
     };
-    addNewWord(wordValues);
+    newWord(wordValues);
     closeDrawer && closeDrawer();
   }
 

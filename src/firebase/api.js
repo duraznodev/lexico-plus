@@ -15,10 +15,14 @@ export const getWordsCollection = () => collection(firebase_db, "words");
 export const addNewWord = (data) => addDoc(getWordsCollection(), data);
 
 export const allFromCollection = async (collection) => {
-  return (await getDocs(collection)).docs.map((doc) => ({
-    ...doc.data(),
-    id: doc.id,
-  }));
+  return (await getDocs(collection)).docs
+    .map((doc) => ({
+      ...doc.data(),
+      id: doc.id,
+    }))
+    .sort((a, b) => {
+      return a.date.seconds - b.date.seconds;
+    });
 };
 
 export const updateInCollection = async (
