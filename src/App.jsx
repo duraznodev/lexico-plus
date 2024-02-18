@@ -16,82 +16,102 @@ import {
 import { Badge } from "./components/ui/badge";
 import { useWords } from "./hooks/useWords";
 import { NewWordDialog } from "./components/Form";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 function App() {
   const words = useWords();
-  const word = words ? words[~~(Math.random() * words.length)] : {};
-  const [actualWord, setActualWord] = useState(word);
+  const [api, setApi] = useState();
 
   const shuffleWord = () => {
     while (true) {
-      const newWord = words[~~(Math.random() * words.length)];
-      if (newWord !== actualWord) {
-        setActualWord(newWord);
+      const newWordIndex = ~~(Math.random() * words.length);
+      if (api.selectedScrollSnap() !== newWordIndex) {
+        api.scrollTo(newWordIndex);
         break;
       }
     }
   };
 
   const nextWord = () => {
-    const currentIndex = words.findIndex((el) => el.word === actualWord.word);
-    console.log(words[(currentIndex + 1) % words.length]);
-    const nextWord = words[(currentIndex + 1) % words.length];
-    setActualWord(nextWord);
+    api.scrollNext();
   };
 
   const prevWord = () => {
-    const currentIndex = words.findIndex((el) => el.word === actualWord.word);
-    const prevWord = words[(currentIndex - 1 + words.length) % words.length];
-    setActualWord(prevWord);
+    api.scrollPrev();
   };
+
   return (
     <>
       <div className="flex h-screen justify-center items-center">
-        {words ? (
-          <Card className="w-full mx-10 max-w-[400px]">
-            <CardHeader className="space-y-0">
-              <div className="flex justify-between">
-                <CardTitle className="text-xl tracking-normal font-bold">
-                  {word.word}
-                </CardTitle>
-                <Badge variant="outline" className="font-bold rounded-full">
-                  {word.times}
-                </Badge>
-              </div>
-              <CardDescription className="text-sm">
-                {word?.date?.toDate().toLocaleDateString()}
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <blockquote className="border-l-2 pl-3 italic">
-                {word.meaning}
-              </blockquote>
-            </CardContent>
-          </Card>
-        ) : (
-          <Card className="w-full mx-10 max-w-[400px] animate-pulse">
-            <CardHeader className="space-y-0">
-              <div className="flex justify-between">
-                <CardTitle className="text-xl tracking-normal font-bold">
-                  <div class="h-6 bg-gray-200 rounded-md w-20"></div>
-                </CardTitle>
-                <Badge variant="outline" className="font-bold rounded-full p-2">
-                  <div className="aspect-square h-3 bg-gray-200 rounded-full"></div>
-                </Badge>
-              </div>
-              <CardDescription className="pt-2">
-                <div class="h-3 bg-gray-200 rounded-md w-24"></div>
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <blockquote className="border-l-2 pl-3 italic flex flex-col gap-y-2">
-                <div class="h-4 bg-gray-200 rounded-md w-full"></div>
-                <div class="h-4 bg-gray-200 rounded-md w-full"></div>
-              </blockquote>
-            </CardContent>
-          </Card>
-        )}
+        <Carousel
+          setApi={setApi}
+          opts={{ loop: true }}
+          className="w-full max-w-sm"
+        >
+          <CarouselContent>
+            {words ? (
+              words.map((word, index) => (
+                <CarouselItem key={index}>
+                  <Card className="w-full max-w-[400px]">
+                    <CardHeader className="space-y-0">
+                      <div className="flex justify-between">
+                        <CardTitle className="text-xl tracking-normal font-bold">
+                          {word.word}
+                        </CardTitle>
+                        <Badge
+                          variant="outline"
+                          className="font-bold rounded-full"
+                        >
+                          {word.times}
+                        </Badge>
+                      </div>
+                      <CardDescription className="text-sm">
+                        {word?.date?.toDate().toLocaleDateString()}
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <blockquote className="border-l-2 pl-3 italic">
+                        {word.meaning}
+                      </blockquote>
+                    </CardContent>
+                  </Card>
+                </CarouselItem>
+              ))
+            ) : (
+              <Card className="w-full mx-10 max-w-[400px] animate-pulse">
+                <CardHeader className="space-y-0">
+                  <div className="flex justify-between">
+                    <CardTitle className="text-xl tracking-normal font-bold">
+                      <div className="h-6 bg-gray-200 rounded-md w-20"></div>
+                    </CardTitle>
+                    <Badge
+                      variant="outline"
+                      className="font-bold rounded-full p-2"
+                    >
+                      <div className="aspect-square h-3 bg-gray-200 rounded-full"></div>
+                    </Badge>
+                  </div>
+                  <CardDescription className="pt-2">
+                    <div className="h-3 bg-gray-200 rounded-md w-24"></div>
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <blockquote className="border-l-2 pl-3 italic flex flex-col gap-y-2">
+                    <div className="h-4 bg-gray-200 rounded-md w-full"></div>
+                    <div className="h-4 bg-gray-200 rounded-md w-full"></div>
+                  </blockquote>
+                </CardContent>
+              </Card>
+            )}
+          </CarouselContent>
+        </Carousel>
       </div>
       <div className="absolute bottom-0 mb-20 flex gap-x-4 w-full justify-center items-center">
         <Button variant="secondary" className="rounded-full aspect-square">
