@@ -26,9 +26,13 @@ export function GlobalProvider({ children }) {
     featureNewWord(newWords[index].id);
   };
 
+  const filterWords = (words) => {
+    return words.filter(word=>!word?.hidden)
+  }
+
   useEffect(() => {
     const init = async () => {
-      setWords(await allFromCollection(getWordsCollection()));
+      setWords(filterWords(await allFromCollection(getWordsCollection())));
     };
     init();
   }, []);
